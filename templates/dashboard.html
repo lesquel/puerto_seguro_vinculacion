@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Puerto Seguro{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi bi-speedometer2"></i> Panel de Control
+        </h1>
+        <span class="badge bg-{{ user.rol }} fs-6">
+            {{ user.get_rol_display }}
+        </span>
+    </div>
+
+    <!-- Tarjetas de Estadísticas -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-uppercase">Total Barcos</h6>
+                            <h2 class="display-4 fw-bold">{{ total_barcos }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-ship" style="font-size: 3rem; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="{% url 'lista_barcos' %}" class="text-white text-decoration-none">
+                        Ver todos <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if mis_registros is not None %}
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-uppercase">Mis Registros</h6>
+                            <h2 class="display-4 fw-bold">{{ mis_registros }}</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-person-check" style="font-size: 3rem; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <span class="text-white">Barcos registrados por ti</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-uppercase">Tu Rol</h6>
+                            <h4 class="mt-3">{{ user.get_rol_display }}</h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-person-badge" style="font-size: 3rem; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <span class="text-white">{{ user.username }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barcos por Tipo -->
+    {% if barcos_por_tipo %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Barcos por Tipo</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for item in barcos_por_tipo %}
+                <div class="col-md-3 col-6 mb-3">
+                    <div class="border rounded p-3 text-center">
+                        <h3 class="text-primary">{{ item.total }}</h3>
+                        <small class="text-muted text-capitalize">{{ item.tipo }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Acciones Rápidas -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <a href="{% url 'lista_barcos' %}" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-list-ul"></i> Ver Lista de Barcos
+                    </a>
+                </div>
+
+                {% if user.rol == 'operador' or user.rol == 'admin' or user.is_superuser %}
+                <div class="col-md-4 mb-2">
+                    <a href="{% url 'crear_barco' %}" class="btn btn-success w-100">
+                        <i class="bi bi-plus-circle"></i> Registrar Nuevo Barco
+                    </a>
+                </div>
+                {% endif %}
+
+                {% if user.is_staff %}
+                <div class="col-md-4 mb-2">
+                    <a href="{% url 'admin:index' %}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-gear"></i> Panel de Administración
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Información de Permisos -->
+    <div class="card mt-4 border-warning">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Tus Permisos</h5>
+        </div>
+        <div class="card-body">
+            <p class="mb-2">Como <strong>{{ user.get_rol_display }}</strong>, tienes acceso a:</p>
+            <ul class="list-unstyled mb-0">
+                <li><i class="bi bi-check-circle text-success"></i> Ver lista de barcos</li>
+                <li><i class="bi bi-check-circle text-success"></i> Ver detalles de barcos</li>
+
+                {% if user.rol == 'operador' or user.rol == 'admin' or user.is_superuser %}
+                <li><i class="bi bi-check-circle text-success"></i> Registrar nuevos barcos</li>
+                <li><i class="bi bi-check-circle text-success"></i> Editar información de barcos</li>
+                {% else %}
+                <li><i class="bi bi-x-circle text-danger"></i> Registrar nuevos barcos (no autorizado)</li>
+                <li><i class="bi bi-x-circle text-danger"></i> Editar información de barcos (no autorizado)</li>
+                {% endif %}
+
+                {% if user.rol == 'admin' or user.is_superuser %}
+                <li><i class="bi bi-check-circle text-success"></i> Eliminar barcos del sistema</li>
+                {% else %}
+                <li><i class="bi bi-x-circle text-danger"></i> Eliminar barcos del sistema (no autorizado)</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

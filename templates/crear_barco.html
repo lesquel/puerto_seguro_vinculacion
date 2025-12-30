@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar Barco - Puerto Seguro{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'lista_barcos' %}">Barcos</a></li>
+            <li class="breadcrumb-item active">Nuevo Registro</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-plus-circle"></i> Registrar Nueva Embarcación
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_nombre" class="form-label">
+                                    <i class="bi bi-ship"></i> Nombre del Barco *
+                                </label>
+                                {{ form.nombre }}
+                                {% if form.nombre.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.nombre.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="id_imo" class="form-label">
+                                    <i class="bi bi-upc-scan"></i> Número IMO *
+                                </label>
+                                {{ form.imo }}
+                                <small class="text-muted">Identificación marítima única</small>
+                                {% if form.imo.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.imo.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_bandera" class="form-label">
+                                    <i class="bi bi-flag"></i> País de Bandera
+                                </label>
+                                {{ form.bandera }}
+                                {% if form.bandera.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.bandera.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="id_tipo" class="form-label">
+                                    <i class="bi bi-tags"></i> Tipo de Embarcación
+                                </label>
+                                {{ form.tipo }}
+                                {% if form.tipo.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.tipo.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'lista_barcos' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle"></i> Registrar Barco
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>
+                        <i class="bi bi-person"></i>
+                        Registrado por: <strong>{{ user.username }}</strong>
+                        ({{ user.get_rol_display }})
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

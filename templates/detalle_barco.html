@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ barco.nombre }} - Puerto Seguro{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'lista_barcos' %}">Barcos</a></li>
+            <li class="breadcrumb-item active">{{ barco.nombre }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-ship"></i> {{ barco.nombre }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Número IMO</label>
+                            <p class="fs-5"><code>{{ barco.imo }}</code></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">País de Bandera</label>
+                            <p class="fs-5">
+                                <i class="bi bi-flag"></i> {{ barco.bandera }}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Tipo de Embarcación</label>
+                            <p>
+                                <span class="badge bg-secondary fs-6">
+                                    {{ barco.get_tipo_display }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Fecha de Registro</label>
+                            <p class="fs-5">
+                                <i class="bi bi-calendar"></i>
+                                {{ barco.fecha_llegada|date:"d/m/Y" }}
+                                <small class="text-muted">{{ barco.fecha_llegada|time:"H:i" }}</small>
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h6 class="text-muted">
+                        <i class="bi bi-person-check"></i> Información de Auditoría
+                    </h6>
+                    <p>
+                        Registrado por:
+                        {% if barco.registrado_por %}
+                        <span class="badge bg-{{ barco.registrado_por.rol }}">
+                            {{ barco.registrado_por.username }}
+                        </span>
+                        ({{ barco.registrado_por.get_rol_display }})
+                        {% else %}
+                        <span class="text-muted">Sistema</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'lista_barcos' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                        <div>
+                            {% if user.rol == 'operador' or user.rol == 'admin' or user.is_superuser %}
+                            <a href="{% url 'editar_barco' barco.pk %}" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            {% endif %}
+
+                            {% if user.rol == 'admin' or user.is_superuser %}
+                            <a href="{% url 'eliminar_barco' barco.pk %}" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <i class="bi bi-info-circle"></i> Información
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <strong>¿Qué es el número IMO?</strong>
+                    </p>
+                    <p class="small text-muted">
+                        El número IMO es un identificador único de 7 dígitos asignado
+                        por la Organización Marítima Internacional a cada barco.
+                        Permanece sin cambios incluso si el barco cambia de nombre,
+                        bandera o propietario.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión - Puerto Seguro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-shield-lock"></i> Identificación
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted text-center mb-4">
+                        Ingrese sus credenciales para acceder al Sistema de Control Portuario
+                    </p>
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Usuario o contraseña incorrectos. Por favor, intente nuevamente.
+                    </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">
+                                <i class="bi bi-person"></i> Usuario
+                            </label>
+                            <input type="text" name="username" id="id_username" class="form-control form-control-lg"
+                                placeholder="Ingrese su usuario" autofocus required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_password" class="form-label">
+                                <i class="bi bi-key"></i> Contraseña
+                            </label>
+                            <input type="password" name="password" id="id_password" class="form-control form-control-lg"
+                                placeholder="Ingrese su contraseña" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> Ingresar al Sistema
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center text-muted">
+                    <small>
+                        <i class="bi bi-info-circle"></i>
+                        Si olvidó su contraseña, contacte al administrador
+                    </small>
+                </div>
+            </div>
+
+            <!-- Información de Demo -->
+            <div class="card mt-4 border-info">
+                <div class="card-header bg-info text-white">
+                    <i class="bi bi-lightbulb"></i> Usuarios de Prueba
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-borderless mb-0">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Rol</th>
+                                <th>Permisos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>admin</code></td>
+                                <td><span class="badge bg-danger">Admin</span></td>
+                                <td>Acceso total</td>
+                            </tr>
+                            <tr>
+                                <td><code>ana_operadora</code></td>
+                                <td><span class="badge bg-success">Operador</span></td>
+                                <td>Ver + Registrar</td>
+                            </tr>
+                            <tr>
+                                <td><code>pepe_guardia</code></td>
+                                <td><span class="badge bg-warning text-dark">Guardia</span></td>
+                                <td>Solo ver</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
